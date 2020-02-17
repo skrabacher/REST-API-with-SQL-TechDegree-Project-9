@@ -1,4 +1,4 @@
-//express set up
+//Express set up
 const express = require('express');
 const router = express.Router();
 // adds express check() and validator() methods
@@ -6,14 +6,28 @@ const { check, validationResult } = require('express-validator'); //originally: 
     // const checkModule = require('express-validator/check');
     // const check = checkModule.check;
     // const validationResult = checkModule.validationResult;
-//array for storing users
-const users = [];
+
+//import Models
+const User = require('/db/models').User;
+const Course = require('/db/models').Course;
+
+/* Handler function to wrap each route. (eliminates need to write try/catch over and over in each route)*/
+function asyncHandler(cb){
+  return async(req, res, next) => {
+    try {
+      await cb(req, res, next)
+    } catch(error){
+      console.log("in asyncHandler CATCH");
+      next(error);
+    }
+  }
+}
 
 // *USER ROUTES*
 
 // GET /api/users 200 - Returns the currently authenticated user
 router.get('/users', (req, res) => {
-    res.json(users);
+    const user = await User.findByPk(req.params.id);
   });
 
 // check() returns a "validation chain". Any number of validation methods can be called on a validation chain to validate a field. 
@@ -50,25 +64,25 @@ router.post('/users', nameValidationChain, emailValidationChain, (req, res) => {
   
 // *COURSE ROUTES*
 // GET /api/courses 200 - Returns a list of courses (including the user that owns each course)
-router.get('/courses', (req, res) => {
+router.get('/courses', asyncHandler(async (req, res) => {
     
-  });
+  }));
 // GET /api/courses/:id 200 - Returns a the course (including the user that owns the course) for the provided course ID
-router.get('/courses/:id', (req, res) => {
+router.get('/courses/:id', asyncHandler(async (req, res) => {
     
-  });
+  }));
 // POST /api/courses 201 - Creates a course, sets the Location header to the URI for the course, and returns no content
-router.post('/courses', (req, res) => {
+router.post('/courses', asyncHandler(async (req, res) => {
     
-  });
+  }));
 // PUT /api/courses/:id 204 - Updates a course and returns no content
-router.put('/courses/:id', (req, res) => {
+router.put('/courses/:id', asyncHandler(async (req, res) => {
     
-  });
+  }));
 // DELETE /api/courses/:id 204 - Deletes a course and returns no content
-router.delete('/courses/:id', (req, res) => {
+router.delete('/courses/:id', asyncHandler(async (req, res) => {
     
-  });
+  }));
    
 module.exports = router;
    
