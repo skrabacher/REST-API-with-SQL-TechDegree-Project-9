@@ -8,8 +8,8 @@ const { check, validationResult } = require('express-validator'); //originally: 
     // const validationResult = checkModule.validationResult;
 
 //import Models
-const User = require('./db/models').User;
-const Course = require('./db/models').Course;
+const User = require('./db').User;
+const Course = require('./db').Course;
 
 /* Handler function to wrap each route. (eliminates need to write try/catch over and over in each route)*/
 function asyncHandler(cb){
@@ -40,7 +40,6 @@ const firstNameVC = check('firstName')
 const lastNameVC = check('lastName')
   .exists({ checkNull: true, checkFalsy: true })
   .withMessage('Please provide a value for "lastName"');
-// check() returns a "validation chain". Any number of validation methods can be called on a validation chain to validate a field. 
 const emailVC = check('emailAddress')
   .exists({ checkNull: true, checkFalsy: true })
   .isEmail()
