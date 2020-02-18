@@ -67,6 +67,8 @@ router.post('/users', firstNameVC, lastNameVC, emailVC, passwordVC, asyncHandler
       // Return the validation errors to the client.
       res.status(400).json({ errors: errorMessages });
     } else {
+      const user = req.body;
+      user.password = bcryptjs.hashSync(user.password); //hashes the new user's password so that it isn't stored in plain text
       await User.create(req.body);//creates new instance of User model 
       // Set the status to 201 Created and end the response.
       res.status(201).location('/').end(); //sets response status & location header
@@ -101,9 +103,15 @@ router.post('/courses', titleVC, descriptionVC, asyncHandler(async (req, res) =>
   }
 }));
 // PUT /api/courses/:id 204 - Updates a course and returns no content
-router.put('/courses/:id', asyncHandler(async (req, res) => {
-  
-  res.status(204).end();
+router.put('/courses/:id', titleVC, descriptionVC, asyncHandler(async (req, res) => {
+  const errors = validationResult(req); //validationResult extracts the validation errors from a request and makes them available in a Result object.
+  if (!errors.isEmpty()) { //if errors exist
+    const errorMessages = errors.array().map(error => error.msg); // Use the Array `map()` method to get a list of error messages.
+    res.status(400).json({ errors: errorMessages }); //responds with error messages
+  } else {
+    await course.update(req.body);
+    res.status(204).end();
+}
 }));
 // DELETE /api/courses/:id 204 - Deletes a course and returns no content
 router.delete('/courses/:id', asyncHandler(async (req, res) => {
