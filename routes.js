@@ -8,8 +8,8 @@ const { check, validationResult } = require('express-validator'); //originally: 
     // const validationResult = checkModule.validationResult;
 
 //import Models
-const User = require('/db/models').User;
-const Course = require('/db/models').Course;
+const User = require('./db/models').User;
+const Course = require('./db/models').Course;
 
 /* Handler function to wrap each route. (eliminates need to write try/catch over and over in each route)*/
 function asyncHandler(cb){
